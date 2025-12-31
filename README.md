@@ -5,7 +5,7 @@ A TypeScript client library for interacting with Govee smart devices via the off
 ## Installation
 
 ```bash
-npm install github:chrisgander/govee-api
+npm install github:dangerchris/govee-api
 ```
 
 Or add to your `package.json`:
@@ -13,7 +13,7 @@ Or add to your `package.json`:
 ```json
 {
   "dependencies": {
-    "govee-api": "github:chrisgander/govee-api"
+    "govee-api": "github:dangerchris/govee-api"
   }
 }
 ```

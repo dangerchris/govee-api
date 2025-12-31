@@ -22,7 +22,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/chrisgander/govee-api.git"
+    "url": "git+https://github.com/dangerchris/govee-api.git"
   },
   "keywords": [
     "govee",
