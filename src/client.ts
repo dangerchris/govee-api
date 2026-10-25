@@ -7,6 +7,8 @@ import type {
   DevicesResponse,
   DeviceStateResponse,
   DeviceStatePayload,
+  DeviceCapabilityCommand,
+  DeviceControlResponse,
   DeviceReading,
   ReadingsResult,
   GoveeClientConfig,
@@ -95,6 +97,39 @@ export class GoveeClient {
     }
 
     return data.payload;
+  }
+
+  /**
+   * Send a capability command to a device (e.g. powerSwitch, brightness, colorRgb)
+   */
+  async controlDevice(
+    device: string,
+    sku: string,
+    capability: DeviceCapabilityCommand
+  ): Promise<void> {
+    const data = await this.makeRequest<DeviceControlResponse>(
+      "/router/api/v1/device/control",
+      "POST",
+      {
+        requestId: crypto.randomUUID(),
+        payload: { sku, device, capability },
+      }
+    );
+
+    if (data.code !== 200) {
+      throw new Error(`API error: ${data.msg}`);
+    }
+  }
+
+  /**
+   * Turn a device on or off
+   */
+  async setPower(device: string, sku: string, on: boolean): Promise<void> {
+    await this.controlDevice(device, sku, {
+      type: "devices.capabilities.on_off",
+      instance: "powerSwitch",
+      value: on ? 1 : 0,
+    });
   }
 
   /**

@@ -21,6 +21,17 @@ export interface DeviceStateResponse {
   payload: DeviceStatePayload;
 }
 
+export interface DeviceCapabilityCommand {
+  type: string;
+  instance: string;
+  value: unknown;
+}
+
+export interface DeviceControlResponse {
+  code: number;
+  msg: string;
+}
+
 export interface DeviceStatePayload {
   sku: string;
   device: string;

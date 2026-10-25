@@ -50,6 +50,20 @@ const state = await client.getDeviceState("XX:XX:XX:XX:XX:XX", "H5100");
 console.log(state.capabilities);
 ```
 
+### Control a Device
+
+```typescript
+// Turn a light or plug on/off
+await client.setPower("XX:XX:XX:XX:XX:XX", "H6008", true);
+
+// Any other capability from the device's capability list
+await client.controlDevice("XX:XX:XX:XX:XX:XX", "H6008", {
+  type: "devices.capabilities.range",
+  instance: "brightness",
+  value: 50,
+});
+```
+
 ### Get Temperature/Humidity Readings
 
 For Govee temperature/humidity sensors (default: H5100):
@@ -86,6 +100,8 @@ const client = new GoveeClient({
 |--------|---------|-------------|
 | `getDevices()` | `Promise<GoveeDevice[]>` | Fetch all devices associated with your account |
 | `getDeviceState(device, sku)` | `Promise<DeviceStatePayload>` | Get current state of a specific device |
+| `controlDevice(device, sku, capability)` | `Promise<void>` | Send a capability command (`{ type, instance, value }`) |
+| `setPower(device, sku, on)` | `Promise<void>` | Turn a device on or off (`powerSwitch`) |
 | `getReadings()` | `Promise<ReadingsResult>` | Get temperature/humidity readings from sensors |
 
 ### `fahrenheitToCelsius(f: number): number`

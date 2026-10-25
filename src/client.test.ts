@@ -216,4 +216,46 @@ describe("GoveeClient", () => {
       expect(result.failedDevices).toEqual(["Living Room"]);
     });
   });
+
+  describe("setPower", () => {
+    beforeEach(() => {
+      mock.restore();
+    });
+
+    it("sends a powerSwitch control command", async () => {
+      const fetchMock = mock((_url: string, _init: RequestInit) =>
+        Promise.resolve({
+          ok: true,
+          json: () => Promise.resolve({ code: 200, msg: "success" }),
+        } as Response)
+      );
+      globalThis.fetch = fetchMock as unknown as typeof fetch;
+
+      const client = new GoveeClient({ apiKey: "test-key" });
+      await client.setPower("AA:BB:CC:DD:EE:FF", "H6008", true);
+
+      const [url, init] = fetchMock.mock.calls[0]!;
+      expect(url).toBe("https://openapi.api.govee.com/router/api/v1/device/control");
+      expect(JSON.parse(init.body as string).payload).toEqual({
+        sku: "H6008",
+        device: "AA:BB:CC:DD:EE:FF",
+        capability: { type: "devices.capabilities.on_off", instance: "powerSwitch", value: 1 },
+      });
+    });
+
+    it("throws error on API error response", async () => {
+      globalThis.fetch = mock(() =>
+        Promise.resolve({
+          ok: true,
+          json: () => Promise.resolve({ code: 400, msg: "Device offline" }),
+        } as Response)
+      );
+
+      const client = new GoveeClient({ apiKey: "test-key" });
+
+      expect(client.setPower("AA:BB:CC:DD:EE:FF", "H6008", false)).rejects.toThrow(
+        "API error: Device offline"
+      );
+    });
+  });
 });

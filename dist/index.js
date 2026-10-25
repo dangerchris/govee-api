@@ -48,6 +48,22 @@ class GoveeClient {
     }
     return data.payload;
   }
+  async controlDevice(device, sku, capability) {
+    const data = await this.makeRequest("/router/api/v1/device/control", "POST", {
+      requestId: crypto.randomUUID(),
+      payload: { sku, device, capability }
+    });
+    if (data.code !== 200) {
+      throw new Error(`API error: ${data.msg}`);
+    }
+  }
+  async setPower(device, sku, on) {
+    await this.controlDevice(device, sku, {
+      type: "devices.capabilities.on_off",
+      instance: "powerSwitch",
+      value: on ? 1 : 0
+    });
+  }
   async getReadings() {
     const allDevices = await this.getDevices();
     const devices = allDevices.filter((d) => d.sku === this.targetModel);

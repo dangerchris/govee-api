@@ -8,6 +8,8 @@ export type {
   DevicesResponse,
   DeviceStateResponse,
   DeviceStatePayload,
+  DeviceCapabilityCommand,
+  DeviceControlResponse,
   DeviceReading,
   ReadingsResult,
   GoveeClientConfig,
